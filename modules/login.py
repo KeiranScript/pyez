@@ -3,7 +3,7 @@ import json
 import requests
 from typer import echo
 
-CONFIG_DIR = Path("~/PycharmProjects/pyE-Z/config.json").expanduser()
+CONFIG_DIR = Path("~/.config/pyE-Z/config.json").expanduser()
 
 DEFAULT = {
     "API_KEY": "",
@@ -11,6 +11,7 @@ DEFAULT = {
     "DEBUG": True,
     "RAW_FILE": False
 }
+
 
 def initialize_config():
     if not CONFIG_DIR.exists():
@@ -20,6 +21,7 @@ def initialize_config():
         echo(f"Created {CONFIG_DIR} with default values")
         return DEFAULT
     return read_config()
+
 
 def read_config() -> dict:
     if not CONFIG_DIR.exists():
@@ -32,13 +34,16 @@ def read_config() -> dict:
         echo("Invalid JSON in config file, resetting to defaults.")
         return initialize_config()
 
+
 def save_config(config: dict):
     with CONFIG_DIR.open("w") as file:
         json.dump(config, file, indent=4)
 
+
 def get_value(key: str):
     config = read_config()
     return config.get(key, None)
+
 
 def login():
     config = read_config()
@@ -55,6 +60,7 @@ def login():
     save_config(config)
     echo("Login successful.")
 
+
 def validate_key(key: str) -> bool:
     if not key:
         return False
@@ -63,8 +69,10 @@ def validate_key(key: str) -> bool:
 
     return response.status_code == 200
 
-def config_dir ():
+
+def config_dir():
     echo("Configuration directory: " + str(CONFIG_DIR))
+
 
 if __name__ == '__main__':
     login()
